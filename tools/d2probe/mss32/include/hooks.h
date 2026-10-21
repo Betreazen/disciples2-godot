@@ -1,0 +1,362 @@
+/*
+ * This file is part of the modding toolset for Disciples 2.
+ * (https://github.com/VladimirMakeev/D2ModdingToolset)
+ * Copyright (C) 2020 Vladimir Makeev.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef HOOKS_H
+#define HOOKS_H
+
+#include "attack.h"
+#include "attacktypepairvector.h"
+#include "d2string.h"
+#include "idlist.h"
+#include "targetset.h"
+#include <cstddef>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace game {
+struct DialogScriptData;
+struct CMenuNewSkirmishSingle;
+struct CMidDataCache2;
+struct GlobalData;
+struct CDBTable;
+struct LBuildingCategoryTable;
+struct CBuildingBranch;
+struct IUsSoldier;
+struct IMidgardObjectMap;
+struct BattleMsgData;
+struct CBatAttackGiveAttack;
+struct CBatAttackShatter;
+struct BattleAttackInfo;
+struct CMidPlayer;
+struct CEncLayoutSpell;
+struct CEncParamBase;
+struct CDDCarryOverItems;
+struct IMidDropManager;
+struct CListBoxInterf;
+struct CPhaseGame;
+struct CMqPoint;
+struct os_exception;
+struct CMidUnit;
+struct CMidUnitGroup;
+struct CUnitGenerator;
+struct CMenuPhase;
+struct NetPlayerInfo;
+struct LRaceCategory;
+struct CMidgardScenarioMap;
+struct IMidgardStreamEnv;
+struct CMidStreamEnvFile;
+struct IUsUnit;
+struct TBuildingType;
+struct TUsUnitImpl;
+struct EditBoxData;
+struct CMidgardPlan;
+struct CScenarioVisitor;
+struct LSiteCategory;
+struct CMidSite;
+struct CTextBoxInterf;
+
+template <typename T>
+struct CInterfaceT;
+struct CInterfaceVftable;
+using CInterface = CInterfaceT<CInterfaceVftable>;
+
+enum class BuildingBranchNumber : int;
+enum class CanApplyPotionResult : int;
+enum class BuildingStatus : int;
+}; // namespace game
+
+namespace hooks {
+
+struct HookInfo
+{
+    void* target;
+    void* hook;
+    void** original;
+};
+using Hooks = std::vector<HookInfo>;
+
+/**
+ * Toolset bisection directives read from probe/hooks.txt (see README "Режим зонда" / "hooks.txt"),
+ * one per line, prefixed 'toolset:'. Distinct from the hook name whitelist that file also carries:
+ * every field is false/empty/zero when hooks.txt has none of them - including when hooks.txt is
+ * absent - so getProbeHooks(), getVftableHooks() and adjustGameRestrictions() then behave exactly
+ * as before this feature (probe hooks only).
+ *
+ * Lets the intro-video -> main-menu crash (see menuCompatHooks in probehooks.cpp) be bisected
+ * against the full toolset without a rebuild: add slices of the toolset's own hook table
+ * (getGameHooks()), its vftable hooks, or stop adjustGameRestrictions() from bailing out, one
+ * directive at a time. Parsed by probe::init(), read via probe::toolsetDirectives().
+ */
+struct ToolsetDirectives
+{
+    /** 'toolset:A-B' or 'toolset:all': add getGameHooks()[A..B] (or all of it, A=0). */
+    bool rangeRequested{false};
+    /** 'toolset:all' specifically; rangeFrom/rangeTo are meaningless when this is set. */
+    bool rangeAll{false};
+    std::size_t rangeFrom{0};
+    std::size_t rangeTo{0};
+    /** 'toolset:vftable': getVftableHooks() returns the toolset list instead of empty. */
+    bool vftable{false};
+    /** 'toolset:restrictions': adjustGameRestrictions() does not early-return in probe mode. */
+    bool restrictions{false};
+};
+
+/** Returns array of hooks to setup. */
+Hooks getHooks();
+Hooks getVftableHooks();
+
+/**
+ * Hooks used only in game (executableIsGame()). Normally an implementation detail folded into
+ * getHooks(), exposed here so getProbeHooks() (probehooks.cpp) can splice slices of it in for
+ * probe/hooks.txt 'toolset:A-B' / 'toolset:all' bisection. Builds a fresh vector on every call -
+ * callers must call it at most once per run (getHooks() never calls it in probe mode, so the one
+ * call from getProbeHooks() stays the only call).
+ */
+Hooks getGameHooks();
+
+void respopupInitHooked(void);
+void* __fastcall toggleShowBannersInitHooked(void* thisptr, int /*%edx*/);
+
+bool __stdcall addPlayerUnitsToHireListHooked(game::CMidDataCache2* dataCache,
+                                              const game::CMidgardID* playerId,
+                                              const game::CMidgardID* a3,
+                                              game::IdList* hireList);
+
+/**
+ * Create TBuildingUnitUpgType objects for buildings from heal category.
+ * This allows to assign temples as buildings required to hire units.
+ */
+void __stdcall createBuildingTypeHooked(const game::CDBTable* dbTable,
+                                        void* a2,
+                                        const game::GlobalData** globalData);
+
+game::LBuildingCategoryTable* __fastcall buildingCategoryTableCtorHooked(
+    game::LBuildingCategoryTable* thisptr,
+    int /*%edx*/,
+    const char* globalsFolderPath,
+    void* codeBaseEnvProxy);
+
+game::CBuildingBranch* __fastcall buildingBranchCtorHooked(
+    game::CBuildingBranch* thisptr,
+    int /*%edx*/,
+    game::CPhaseGame* phaseGame,
+    game::BuildingBranchNumber* branchNumber);
+
+int __stdcall chooseUnitLaneHooked(const game::IUsSoldier* soldier);
+
+bool __stdcall isTurnValidHooked(int turn);
+
+game::CMidgardID* __stdcall radioButtonIndexToPlayerIdHooked(game::CMidgardID* playerId,
+                                                             game::IMidgardObjectMap* objectMap,
+                                                             int index);
+
+bool __fastcall giveAttackCanPerformHooked(game::CBatAttackGiveAttack* thisptr,
+                                           int /*%edx*/,
+                                           game::IMidgardObjectMap* objectMap,
+                                           game::BattleMsgData* battleMsgData,
+                                           game::CMidgardID* unitId);
+
+bool __fastcall shatterCanPerformHooked(game::CBatAttackShatter* thisptr,
+                                        int /*%edx*/,
+                                        game::IMidgardObjectMap* objectMap,
+                                        game::BattleMsgData* battleMsgData,
+                                        game::CMidgardID* unitId);
+
+void __fastcall setUnitShatteredArmorHooked(game::BattleMsgData* thisptr,
+                                            int /*%edx*/,
+                                            const game::CMidgardID* unitId,
+                                            int armor);
+
+void __fastcall shatterOnHitHooked(game::CBatAttackShatter* thisptr,
+                                   int /*%edx*/,
+                                   game::IMidgardObjectMap* objectMap,
+                                   game::BattleMsgData* battleMsgData,
+                                   game::CMidgardID* unitId,
+                                   game::BattleAttackInfo** attackInfo);
+
+bool __fastcall shatterCanMissHooked(game::CBatAttackShatter* thisptr,
+                                     int /*%edx*/,
+                                     game::BattleMsgData* battleMsgData,
+                                     game::CMidgardID* id);
+
+bool __stdcall buildLordSpecificBuildingsHooked(game::IMidgardObjectMap* objectMap,
+                                                const game::NetPlayerInfo* playerInfo,
+                                                int);
+
+game::CEncLayoutSpell* __fastcall encLayoutSpellCtorHooked(game::CEncLayoutSpell* thisptr,
+                                                           int /*%edx*/,
+                                                           game::IMidgardObjectMap* objectMap,
+                                                           game::CInterface* interf,
+                                                           void* a2,
+                                                           game::CMidgardID* spellId,
+                                                           game::CEncParamBase* encParam,
+                                                           const game::CMidgardID* playerId);
+
+int __stdcall countStacksOnMapHooked(game::IMidgardObjectMap* objectMap);
+
+game::CDDCarryOverItems* __fastcall carryOverItemsCtorHooked(game::CDDCarryOverItems* thisptr,
+                                                             int /*%edx*/,
+                                                             game::IMidDropManager* dropManager,
+                                                             game::CListBoxInterf* listBox,
+                                                             game::CPhaseGame* phaseGame,
+                                                             int carryOverItemsMax);
+
+void __fastcall markMapPositionHooked(void* thisptr, int /*%edx*/, game::CMqPoint* position);
+
+int __stdcall computeDamageHooked(const game::IMidgardObjectMap* objectMap,
+                                  const game::BattleMsgData* battleMsgData,
+                                  const game::IAttack* attack,
+                                  const game::CMidgardID* attackerUnitId,
+                                  const game::CMidgardID* targetUnitId,
+                                  bool computeCriticalHit,
+                                  int* attackDamage,
+                                  int* criticalHitDamage);
+
+void __stdcall getAttackPowerHooked(int* power,
+                                    const game::IAttack* attack,
+                                    const game::IMidgardObjectMap* objectMap,
+                                    const game::CMidgardID* unitId,
+                                    const game::BattleMsgData* battleMsgData);
+
+bool __stdcall attackShouldMissHooked(const int* power);
+
+int __stdcall getUnitHealAttackNumberHooked(const game::IMidgardObjectMap* objectMap,
+                                            const game::CMidgardID* unitId);
+
+int __stdcall getAttackQtyDamageOrHealHooked(const game::IAttack* attack, int damageMax);
+
+void __stdcall afterBattleTurnHooked(game::BattleMsgData* battleMsgData,
+                                     const game::CMidgardID* unitId,
+                                     const game::CMidgardID* nextUnitId);
+
+void __stdcall beforeBattleTurnHooked(game::BattleMsgData* battleMsgData,
+                                      game::IMidgardObjectMap* objectMap,
+                                      const game::CMidgardID* unitId);
+
+void __stdcall throwExceptionHooked(const game::os_exception* thisptr, const void* throwInfo);
+
+int __stdcall computeUnitEffectiveHpForAiHooked(const game::IMidgardObjectMap* objectMap,
+                                                const game::CMidUnit* unit,
+                                                const game::BattleMsgData* battleMsgData);
+
+void __stdcall applyDynUpgradeToAttackDataHooked(const game::CMidgardID* unitImplId,
+                                                 game::CUnitGenerator* unitGenerator,
+                                                 int unitLevel,
+                                                 game::IdType dynUpgradeType,
+                                                 const game::CMidgardID* altAttackId,
+                                                 game::CAttackData* attackData);
+
+void __stdcall getUnitAttacksHooked(const game::IMidgardObjectMap* objectMap,
+                                    const game::CMidgardID* unitId,
+                                    game::AttackTypePairVector* value,
+                                    bool checkAltAttack);
+
+bool __stdcall isUnitUseAdditionalAnimationHooked(const game::CMidgardID* unitId);
+
+bool __stdcall shouldAddUnitToHireHooked(const game::CMidPlayer* player,
+                                         game::CPhaseGame* phaseGame,
+                                         const game::CMidgardID* unitImplId);
+
+bool __stdcall enableUnitInHireListUiHooked(const game::CMidPlayer* player,
+                                            game::CPhaseGame* phaseGame,
+                                            const game::CMidgardID* unitImplId);
+
+void __stdcall getCityPreviewLargeImageNamesHooked(game::List<game::String>* imageNames,
+                                                   const void* cityFF,
+                                                   const game::LRaceCategory* race,
+                                                   int cityTier);
+
+void __stdcall getCityIconImageNamesHooked(game::List<game::String>* imageNames,
+                                           const void* iconsFF,
+                                           const game::CMidgardID* fortificationId,
+                                           const game::IMidgardObjectMap* objectMap);
+
+bool __fastcall checkMapObjectsHooked(game::CMidgardScenarioMap* scenarioMap, int /*%edx*/);
+
+int __stdcall loadScenarioMapHooked(int a1,
+                                    game::CMidStreamEnvFile* streamEnv,
+                                    game::CMidgardScenarioMap* scenarioMap);
+
+bool __fastcall scenarioMapStreamHooked(game::CMidgardScenarioMap* scenarioMap,
+                                        int /*%edx*/,
+                                        game::IMidgardStreamEnv* streamEnv);
+
+void __stdcall getStackFortRuinGroupForChangeHooked(game::IMidgardObjectMap* objectMap,
+                                                    const game::CMidgardID* objectId,
+                                                    game::CMidUnitGroup** result);
+
+game::CanApplyPotionResult __stdcall canApplyPotionToUnitHooked(
+    const game::IMidgardObjectMap* objectMap,
+    const game::CMidgardID* unitId,
+    const game::CMidgardID* groupId,
+    const game::CMidgardID* itemId);
+
+void __stdcall getUnitRequiredBuildingsHooked(const game::IMidgardObjectMap* objectMap,
+                                              const game::CMidgardID* playerId,
+                                              const game::IUsUnit* unitImpl,
+                                              game::Vector<game::TBuildingType*>* result);
+
+const game::TUsUnitImpl* __stdcall getUpgradeUnitImplCheckXpHooked(
+    const game::IMidgardObjectMap* objectMap,
+    const game::CMidUnit* unit);
+
+bool __stdcall changeUnitXpCheckUpgradeHooked(game::IMidgardObjectMap* objectMap,
+                                              const game::CMidgardID* playerId,
+                                              const game::CMidgardID* unitId,
+                                              int amount);
+
+bool __stdcall isUnitTierMaxHooked(const game::IMidgardObjectMap* objectMap,
+                                   const game::CMidgardID* playerId,
+                                   const game::CMidgardID* unitId);
+
+bool __stdcall isUnitLevelNotMaxHooked(const game::IMidgardObjectMap* objectMap,
+                                       const game::CMidgardID* playerId,
+                                       const game::CMidgardID* unitId);
+
+bool __stdcall isUnitUpgradePendingHooked(const game::CMidgardID* unitId,
+                                          const game::IMidgardObjectMap* objectMap);
+
+bool __fastcall editBoxIsCharValidHooked(const game::EditBoxData* thisptr, int /*%edx*/, char ch);
+
+game::BuildingStatus __stdcall getBuildingStatusHooked(const game::IMidgardObjectMap* objectMap,
+                                                       const game::CMidgardID* playerId,
+                                                       const game::CMidgardID* buildingId,
+                                                       bool ignoreBuildTurnAndCost);
+
+bool __stdcall removeStackHooked(const game::CMidgardID* stackId,
+                                 game::CMidgardPlan* plan,
+                                 game::IMidgardObjectMap* objectMap,
+                                 game::CScenarioVisitor* visitor);
+
+bool __stdcall setStackSrcTemplateHooked(const game::CMidgardID* stackId,
+                                         const game::CMidgardID* stackTemplateId,
+                                         game::IMidgardObjectMap* objectMap,
+                                         int apply);
+const char* __stdcall getSiteNameSuffixHooked(const game::LSiteCategory* siteCategory);
+
+void __stdcall updateEncLayoutSiteHooked(const game::CMidSite* site, game::CTextBoxInterf* textBox);
+
+game::String* __stdcall getSiteSoundHooked(game::String* soundName, const game::CMidSite* site);
+
+bool __stdcall siteHasSoundHooked(const game::CMidSite* site);
+
+} // namespace hooks
+
+#endif // HOOKS_H

@@ -1,0 +1,63 @@
+[
+  {
+    "file": "map-001.jsonl",
+    "sha256": "5d04b499bf7f80126e7f2a85016678262436f4e1908d93b1f75cc91fb035e7c6",
+    "bytes": 1060362,
+    "events": 4499,
+    "battles": 7,
+    "battle_end": true,
+    "scenario": "arena",
+    "started_at": "2026-09-08T15:48:48.859041+00:00",
+    "seconds": 470.8,
+    "status": "route_failed",
+    "route": {
+      "file": "arena_route.json",
+      "sha256": "ce5d120d859f31047209904333c17ee86b803772fedbefd7d5e799e66b7259e4",
+      "turns": 18,
+      "checkpoints": []
+    },
+    "turns_played": 17,
+    "saves": [],
+    "inputs": [
+      {
+        "turn": "start",
+        "file": "map-start.sg",
+        "sha256": "aaeab42c3782c8f1df3c179ee6a36625c877b44139896a7677413a81fd4cecd6",
+        "bytes": 39234
+      },
+      {
+        "turn": "route",
+        "file": "route.json",
+        "sha256": "ce5d120d859f31047209904333c17ee86b803772fedbefd7d5e799e66b7259e4",
+        "bytes": 14442
+      }
+    ],
+    "actions_done": [
+      {
+        "turn": 1,
+        "do": "verify_squad",
+        "note": "состав отряда: ['g000uu0019', 'g000uu0044', 'g000uu0044', 'g000uu5131', 'g000uu0022', 'g000uu0022']"
+      },
+      {
+        "turn": 2,
+        "do": "attack",
+        "note": "бой (цель (13, 5)): победитель S143KC0000, attack_new=90 attack_get=21 immune=26 dmg=10 xp=6"
+      },
+      {
+        "turn": 6,
+        "do": "attack",
+        "note": "бой (цель (18, 5)): победитель S143KC0002, attack_new=107 attack_get=1 immune=19 dmg=8 xp=7"
+      },
+      {
+        "turn": 10,
+        "do": "attack",
+        "note": "бой (цель (23, 5)): победитель S143KC0000, attack_new=160 attack_get=4 immune=15 dmg=20 xp=6"
+      },
+      {
+        "turn": 14,
+        "do": "attack",
+        "note": "бой (цель (28, 5)): победитель S143KC0000, attack_new=121 attack_get=12 immune=12 dmg=13 xp=6"
+      }
+    ]
+  }
+]

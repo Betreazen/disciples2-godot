@@ -1,0 +1,38 @@
+[
+  {
+    "file": "battle-001.jsonl",
+    "sha256": "c2a2af685ee9d96031ea6a8f520467256e8e4b21b1254c7ba2769513cc958448",
+    "bytes": 141969,
+    "events": 537,
+    "battles": 7,
+    "battle_end": true,
+    "scenario": "test_fast_battle_a",
+    "started_at": "2026-09-06T20:42:59.952679+00:00",
+    "seconds": 95.7,
+    "status": "ok"
+  },
+  {
+    "file": "battle-002.jsonl",
+    "sha256": "955038dac1fd02d7a0fd0967492180f0677035e64859ffd7f5ad31fe354aab25",
+    "bytes": 449134,
+    "events": 1713,
+    "battles": 3,
+    "battle_end": true,
+    "scenario": "test_fast_battle_a",
+    "started_at": "2026-09-06T22:08:10.590004+00:00",
+    "seconds": 160.7,
+    "status": "ok"
+  },
+  {
+    "file": "battle-003.jsonl",
+    "sha256": "6a8fbfae7f0ade36029d08435d01e39941a320b9ceae84a168ab03a31b6eb9c1",
+    "bytes": 1061058,
+    "events": 4014,
+    "battles": 7,
+    "battle_end": true,
+    "scenario": "test_fast_battle_a",
+    "started_at": "2026-09-06T22:14:09.290219+00:00",
+    "seconds": 362.6,
+    "status": "ok"
+  }
+]

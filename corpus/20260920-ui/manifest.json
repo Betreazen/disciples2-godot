@@ -1,0 +1,46 @@
+[
+  {
+    "file": "passive-001.jsonl",
+    "sha256": "21a294ed446f73cc62eee3603000957c06fc12bf266bdfe8649f9528f6d0827d",
+    "bytes": 14437044,
+    "events": 114339,
+    "battles": 7,
+    "battle_end": true,
+    "scenario": "passive",
+    "started_at": "2026-09-19T15:46:19.180872+00:00",
+    "seconds": 4241.5,
+    "status": "ok",
+    "saves": [
+      "rastlennaya-vlast-human-t01-001.sg",
+      "rastlennaya-vlast-undead-t01-002.sg",
+      "rastlennaya-vlast-heretic-t01-003.sg",
+      "set-fardeyla-elf-t01-004.sg",
+      "ai-t08a-rod-code7-elf-t01-005.sg",
+      "ai-t08a-rod-code7-elf-t01-006.sg",
+      "ai-t08a-rod-code7-elf-t01-007.sg",
+      "ai-t08a-rod-code7-elf-t01-008.sg",
+      "ai-t08a-rod-code7-elf-t01-009.sg",
+      "ai-t08a-rod-code7-elf-t02-010.sg",
+      "ai-q43-thief-warrior-lord-human-t01-011.sg",
+      "ai-q43-thief-warrior-lord-human-t01-012.sg",
+      "ai-g2-thief-riot-human-t01-013.sg",
+      "ai-q34-staff-refusals-human-t01-014.sg",
+      "ai-q34-staff-refusals-human-t01-015.sg",
+      "ai-q34-staff-refusals-human-t02-016.sg",
+      "ai-q30-equip-refusals-human-t01-017.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t01-018.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t01-019.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t02-020.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t02-021.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t03-022.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t03-023.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t04-024.sg",
+      "ai-q47b-hotseat-refuse-human-elf-t04-025.sg"
+    ],
+    "saves_rejected": {
+      "неполный": 2,
+      "копия": 25,
+      "повтор": 9
+    }
+  }
+]

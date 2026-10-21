@@ -1,0 +1,259 @@
+/*
+ * This file is part of the modding toolset for Disciples 2.
+ * (https://github.com/VladimirMakeev/D2ModdingToolset)
+ * Copyright (C) 2021 Stanislav Egorov.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef ORIGINALFUNCTIONS_H
+#define ORIGINALFUNCTIONS_H
+
+#include "attackimpl.h"
+#include "autodialog.h"
+#include "battlemsgdata.h"
+#include "batlogic.h"
+#include "citystackinterf.h"
+#include "commandmsg.h"
+#include "condinterf.h"
+#include "d2osexception.h"
+#include "ddcarryoveritems.h"
+#include "editboxinterf.h"
+#include "effectinterf.h"
+#include "effectresult.h"
+#include "enclayoutcity.h"
+#include "enclayoutruin.h"
+#include "enclayoutspell.h"
+#include "enclayoutstack.h"
+#include "enclayoutunit.h"
+#include "exchangeinterf.h"
+#include "game.h"
+#include "gameimages.h"
+#include "globalvariables.h"
+#include "imagelayerlist.h"
+#include "mainview2.h"
+#include "menubase.h"
+#include "menuload.h"
+#include "menunewskirmishhotseat.h"
+#include "menunewskirmishmulti.h"
+#include "menunewskirmishsingle.h"
+#include "menuphase.h"
+#include "midcommandqueue2.h"
+#include "midevcondition.h"
+#include "mideveffect.h"
+#include "midevent.h"
+#include "midgard.h"
+#include "midgardscenariomap.h"
+#include "midmsgsender.h"
+#include "midobjectlock.h"
+#include "midserverlogic.h"
+#include "midstack.h"
+#include "midunit.h"
+#include "mqnetplayer.h"
+#include "netmsg.h"
+#include "nobleactionresult.h"
+#include "objectinterf.h"
+#include "pickupdropinterf.h"
+#include "scenedit.h"
+#include "scenpropinterf.h"
+#include "sitemerchantinterf.h"
+#include "taskobjaddsite.h"
+#include "taskobjprop.h"
+#include "testcondition.h"
+#include "visitors.h"
+
+namespace hooks {
+
+struct OriginalFunctions
+{
+    game::ComputePlayerDailyIncome computePlayerDailyIncome;
+    // Probe mode only, see probe.h
+    game::ComputeDamage computeDamage;
+    game::ComputeDamageMax computeDamageMax;
+    game::ComputeDamageWithBuffs computeDamageWithBuffs;
+    game::ComputeArmor computeArmor;
+    game::GetAttackPower getAttackPower;
+    game::AttackShouldMiss attackShouldMiss;
+    game::GenerateRandomNumber generateRandomNumber;
+    game::GenerateRandomNumberStd generateRandomNumberStd;
+    game::CreateBatAttack createBatAttack;
+    game::GetAttackClassWardFlagPosition getAttackClassWardFlagPosition;
+    game::AttackClassToString attackClassToString;
+    game::MarkMapPosition markMapPosition;
+    game::LoadScenarioMap loadScenarioMap;
+
+    game::CMidgardScenarioMapApi::Api::Stream scenarioMapStream;
+
+    game::CCityStackInterfApi::Api::Constructor cityStackInterfCtor;
+    game::CExchangeInterfApi::Api::Constructor exchangeInterfCtor;
+    game::CPickUpDropInterfApi::Api::Constructor pickupDropInterfCtor;
+    game::CSiteMerchantInterfApi::Api::Constructor siteMerchantInterfCtor;
+    game::CDDCarryOverItemsApi::Api::Constructor carryOverItemsCtor;
+    game::CEncLayoutSpellApi::Api::Constructor encLayoutSpellCtor;
+    game::os_exceptionApi::Api::ThrowException throwException;
+    game::BattleMsgDataApi::Api::FindAttackTarget findAttackTarget;
+    game::BattleMsgDataApi::Api::Constructor battleMsgDataCtor;
+    game::GetSoldierImmunityAiRating getSoldierImmunityAiRating;
+    game::GetAttackSourceWardFlagPosition getAttackSourceWardFlagPosition;
+    game::BattleMsgDataApi::Api::AddUnitToBattleMsgData addUnitToBattleMsgData;
+    game::CNetMsgVftable::Serialize stackBattleActionMsgSerialize;
+    game::CNetMsgVftable::Serialize cmdBattleStartMsgSerialize;
+    game::CNetMsgVftable::Serialize cmdBattleChooseActionMsgSerialize;
+    game::CNetMsgVftable::Serialize cmdBattleResultMsgSerialize;
+    game::CNetMsgVftable::Serialize cmdBattleEndMsgSerialize;
+    game::CCommandMsgApi::Api::Destructor commandMsgDtor;
+    game::CNetMsgApi::Api::Destructor netMsgDtor;
+    game::CAttackImplApi::Api::Constructor2 attackImplCtor2;
+    game::IAttackVftable::GetData attackImplGetData;
+    game::CMidEvConditionApi::Api::CreateFromCategory createEventConditionFromCategory;
+    game::CMidEvConditionApi::Api::GetInfoString eventConditionGetInfoString;
+    game::CMidEvConditionApi::Api::GetDescription eventConditionGetDescription;
+    game::CMidEvConditionApi::Api::GetDescription eventConditionGetBrief;
+    game::editor::CCondInterfApi::Api::CreateFromCategory createCondInterfFromCategory;
+    game::ITestConditionApi::Api::Create createTestCondition;
+    game::CMidEventApi::Api::CheckValid checkEventValid;
+    game::BattleMsgDataApi::Api::BeforeBattleRound beforeBattleRound;
+    game::BattleMsgDataApi::Api::AiChooseBattleAction aiChooseBattleAction;
+    game::CMidUnitVftable::InitWithSoldierImpl initWithSoldierImpl;
+
+    game::CMidEvEffectApi::Api::CreateFromCategory createEventEffectFromCategory;
+    game::CMidEvEffectApi::Api::GetInfoString eventEffectGetInfoString;
+    game::CMidEvEffectApi::Api::GetDescription eventEffectGetDescription;
+    game::CMidEvEffectApi::Api::GetDescription eventEffectGetBrief;
+    game::editor::CEffectInterfApi::Api::CreateFromCategory createEffectInterfFromCategory;
+
+    game::IEffectResultApi::Api::Create createEffectResult;
+
+    game::CMenuPhaseApi::Api::Constructor menuPhaseCtor;
+    game::IMqNetSystemVftable::Destructor menuPhaseDtor;
+    game::CMenuPhaseApi::Api::ShowTransitionToMainOrCloseGame menuPhaseTransitionToMainOrCloseGame;
+
+    game::GameImagesApi::Api::GetCityPreviewLargeImageNames getCityPreviewLargeImageNames;
+    game::GameImagesApi::Api::GetCityIconImageNames getCityIconImageNames;
+
+    game::CEncLayoutUnitApi::Api::Initialize encLayoutUnitInitialize;
+    game::CEncLayoutUnitApi::Api::Update encLayoutUnitUpdate;
+    game::CInterfaceVftable::HandleKeyboard encLayoutUnitHandleKeyboard;
+
+    game::CEncLayoutStackApi::Api::Update encLayoutStackUpdate;
+
+    game::CEncLayoutCityApi::Api::Update encLayoutCityUpdate;
+
+    game::CEncLayoutRuinApi::Api::Update encLayoutRuinUpdate;
+
+    game::IMidMsgSenderVftable::SendObjectsChanges midServerLogicSendObjectsChanges;
+
+    game::CMenuNewSkirmishSingleApi::Api::Constructor menuNewSkirmishSingleCtor;
+    game::CMenuNewSkirmishHotseatApi::Api::Constructor menuNewSkirmishHotseatCtor;
+    game::CMenuNewSkirmishMultiApi::Api::Constructor menuNewSkirmishMultiCtor;
+    game::IMqNetPlayerVftable::SendNetMessage netSinglePlayerSendMessage;
+
+    game::CMidDataCache2::INotifyVftable::OnObjectChanged manageStkInterfOnObjectChanged;
+
+    game::CMidDataCache2::INotifyVftable::OnObjectChanged exchangeInterfOnObjectChanged;
+
+    game::CMidDataCache2::INotifyVftable::OnObjectChanged cityStackInterfOnObjectChanged;
+
+    game::CMidDataCache2::INotifyVftable::OnObjectChanged siteMerchantInterfOnObjectChanged;
+
+    game::CEditBoxInterfApi::Api::Update editBoxInterfUpdate;
+    game::CEditBoxInterfApi::Api::EditBoxDataCtor editBoxDataCtor;
+
+    game::CMenuLoadApi::Api::CreateServer menuLoadCreateServer;
+
+    game::AutoDialogApi::Api::LoadAndParseScriptFile autoDialogLoadAndParseScriptFile;
+
+    game::editor::CScenPropInterfApi::Api::Constructor scenPropInterfCtor;
+
+    game::CMidServerLogicApi::Api::ApplyEventEffectsAndCheckMidEventTriggerers
+        applyEventEffectsAndCheckMidEventTriggerers;
+    game::CMidServerLogicApi::Api::StackMove stackMove;
+    game::CMidServerLogicApi::Api::FilterAndProcessEventsNoPlayer filterAndProcessEventsNoPlayer;
+    game::CMidServerLogicApi::Api::CheckAndExecuteEvent checkAndExecuteEvent;
+    game::CMidServerLogicApi::Api::FilterAndProcessEvents filterAndProcessEvents;
+    game::CMidServerLogicApi::Api::CheckEventConditions checkEventConditions;
+    game::CMidServerLogicApi::Api::ExecuteEventEffects executeEventEffects;
+
+    game::ITestConditionVftable::Test testFrequency;
+    game::ITestConditionVftable::Test testLocation;
+    game::ITestConditionVftable::Test testEnterCity;
+    game::ITestConditionVftable::Test testLeaderToCity;
+    game::ITestConditionVftable::Test testOwnCity;
+    game::ITestConditionVftable::Test testDiplomacy;
+    game::ITestConditionVftable::Test testAlliance;
+    game::ITestConditionVftable::Test testLootRuin;
+    game::ITestConditionVftable::Test testTransformLand;
+    game::ITestConditionVftable::Test testVisitSite;
+    game::ITestConditionVftable::Test testItemToLocation;
+    game::ITestConditionVftable::Test testVarInRange;
+
+    game::RemoveStack removeStack;
+    game::VisitorApi::Api::SetStackSrcTemplate setStackSrcTemplate;
+
+    game::editor::CObjectInterfApi::Api::CreateTaskObj createTaskObj;
+
+    game::ImageLayerListApi::Api::GetMapElementIsoLayerImages getMapElementIsoLayerImages;
+    game::editor::CTaskObjVftable::DoAction taskObjPropDoAction;
+    game::editor::CTaskObjVftable::DoAction taskObjAddSiteDoAction;
+    game::CScenEditApi::Api::ReadScenData readScenData;
+
+    game::CMainView2Api::Api::HandleCmdStackVisitMsg handleCmdStackVisitMsg;
+    game::CMainView2Api::Api::CommandQueueCallback mainView2CommandQueueCallback;
+
+    game::CMidServerLogicApi::Api::Constructor midServerLogicCtor;
+
+    game::NobleActionsApi::Api::Create createNobleActionResult;
+    game::GetNobleActions getSiteNobleActions;
+    game::GetNobleActions getPossibleNobleActions;
+    game::GetNobleActionResultDescription getNobleActionResultDescription;
+
+    game::GlobalVariablesApi::Api::Constructor globalVariablesCtor;
+
+    game::CMidgardApi::Api::ClearNetworkState midgardClearNetworkState;
+    game::CMidgardApi::Api::ClearNetworkStateAndService midgardClearNetworkStateAndService;
+
+    game::CMidCommandQueue2Api::Api::Push midCommandQueue2Push;
+    game::CMidCommandQueue2Api::Api::NMMapConstructor netMsgMapConstructor;
+    game::CCommandMsgApi::Api::Create commandMsgCreate;
+
+    game::CMidObjectLockApi::Api::Constructor midObjectLockCtor;
+
+    game::CBatLogicApi::Api::BattleTurn battleTurn;
+    game::CBatLogicApi::Api::UpdateGroupsIfBattleIsOver updateGroupsIfBattleIsOver;
+    game::BattleMsgDataApi::Api::BeforeBattleTurn beforeBattleTurn;
+    game::BattleMsgDataApi::Api::AfterBattleTurn afterBattleTurn;
+    game::BattleMsgDataApi::Api::IsAutoBattle isAutoBattle;
+    game::BattleMsgDataApi::Api::IsFastBattle isFastBattle;
+
+    // Probe mode only, adventure map and economy (corpus schema v3, docs/corpus-schema.md).
+    game::ComputeMovementCost computeMovementCost;
+    game::StackCanMoveToPosition stackCanMoveToPosition;
+    game::ShowMovementPath showMovementPath;
+    game::ChangeUnitXpCheckUpgrade changeUnitXpCheckUpgrade;
+    game::GetBuildingStatus getBuildingStatus;
+    game::AddPlayerUnitsToHireList addPlayerUnitsToHireList;
+    game::UpdateEncLayoutSite updateEncLayoutSite;
+    game::CMidStackApi::Api::SetPosition midStackSetPosition;
+
+    // Probe mode only, magic and items (corpus schema v4, docs/corpus-schema.md). createBatAttack
+    // above is shared with the toolset's own hook; these two are new.
+    game::GetAttackById getAttackById;
+    game::IsUnitImmuneToAttack isUnitImmuneToAttack;
+};
+
+OriginalFunctions& getOriginalFunctions();
+
+} // namespace hooks
+
+#endif // ORIGINALFUNCTIONS_H

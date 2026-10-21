@@ -1,0 +1,72 @@
+[
+  {
+    "file": "map-001.jsonl",
+    "sha256": "0d678b94f20704b469acac2e0ebcd8d53603b6feab0a64843a308cf22e3d9b68",
+    "bytes": 312490,
+    "events": 1865,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "c4_route",
+    "started_at": "2026-09-07T11:33:53.791978+00:00",
+    "seconds": 657.0,
+    "status": "ok",
+    "route": {
+      "file": "c4_route.json",
+      "sha256": "9620679673185a42203bf924f6f1efd61a1afd03b083361f7d9efa7800efced2",
+      "turns": 48,
+      "checkpoints": [
+        10,
+        20,
+        30,
+        40
+      ]
+    },
+    "turns_played": 48,
+    "saves": [
+      {
+        "turn": 10,
+        "file": "save-10.sg",
+        "sha256": "1d4dfaccd386492371321f13deb7518adac7809c1ec6b0d22f0b20260e9ffe7a",
+        "bytes": 30312
+      },
+      {
+        "turn": 20,
+        "file": "save-20.sg",
+        "sha256": "dbe69de5fab43731ea5fb22ab979be509f085dcc2d4ec5d1f33d0799bedcf666",
+        "bytes": 30312
+      },
+      {
+        "turn": 30,
+        "file": "save-30.sg",
+        "sha256": "2359656e8875976c1484b0857ad78b033e948009873786cb4026b580a5653462",
+        "bytes": 30312
+      },
+      {
+        "turn": 40,
+        "file": "save-40.sg",
+        "sha256": "034d05081337f93935c2951ae4f202eb01bdcfdaa10070606bfc7edc23e94804",
+        "bytes": 30312
+      },
+      {
+        "turn": "final",
+        "file": "save-final.sg",
+        "sha256": "ac37b8645e6ed5c00c83e748dbc2e12166d71186e86d7f5a886cd379677f4481",
+        "bytes": 30312
+      }
+    ],
+    "inputs": [
+      {
+        "turn": "start",
+        "file": "map-start.sg",
+        "sha256": "06c3a1c92b23bbec20544407f43ae99aea7246d76508580bad399d87d40ecd7a",
+        "bytes": 30307
+      },
+      {
+        "turn": "route",
+        "file": "route.json",
+        "sha256": "9620679673185a42203bf924f6f1efd61a1afd03b083361f7d9efa7800efced2",
+        "bytes": 12156
+      }
+    ]
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "file": "passive-001.jsonl",
+    "sha256": "049c7867bef02eccd5213606d3840ebcb7f8da8ec00b8df6d5c7e4a6539d5854",
+    "bytes": 415005,
+    "events": 3896,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "passive",
+    "started_at": "2026-09-19T17:53:29.940950+00:00",
+    "seconds": 184.5,
+    "status": "ok",
+    "saves": [
+      "ui-end-lose-human-t01-001.sg"
+    ],
+    "saves_rejected": {
+      "неполный": 1,
+      "копия": 1
+    }
+  },
+  {
+    "file": "passive-002.jsonl",
+    "sha256": "038ace9188c8f45b4c2a3c9d9d277b21c17ab785291f403fc6a6c9c35c4527df",
+    "bytes": 398674,
+    "events": 3815,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "passive",
+    "started_at": "2026-09-19T17:57:27.993304+00:00",
+    "seconds": 39.1,
+    "status": "ok",
+    "saves": [
+      "ui-end-win-human-t01-002.sg"
+    ],
+    "saves_rejected": {
+      "копия": 1
+    }
+  },
+  {
+    "file": "passive-003.jsonl",
+    "sha256": "bbbea7d88e9de8415caff56563bb3bdd098b1f37d8072cdf61f12f840bc646a2",
+    "bytes": 985334,
+    "events": 8557,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "passive",
+    "started_at": "2026-09-19T17:59:05.145996+00:00",
+    "seconds": 710.4,
+    "status": "ok",
+    "saves": [
+      "ui-misc-human-t01-003.sg",
+      "ui-misc-human-t01-004.sg",
+      "ui-misc-human-t01-005.sg"
+    ],
+    "saves_rejected": {
+      "копия": 3,
+      "повтор": 1
+    }
+  },
+  {
+    "file": "passive-004.jsonl",
+    "sha256": "cce4e7ebcc4b7512e1d941b142bcb6eed805b4321ed96727fc2827c863b7cd95",
+    "bytes": 639401,
+    "events": 4990,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "passive",
+    "started_at": "2026-09-19T18:11:46.988025+00:00",
+    "seconds": 110.9,
+    "status": "ok",
+    "saves": [],
+    "saves_rejected": {}
+  }
+]

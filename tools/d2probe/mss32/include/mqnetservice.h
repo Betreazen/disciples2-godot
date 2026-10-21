@@ -1,0 +1,85 @@
+/*
+ * This file is part of the modding toolset for Disciples 2.
+ * (https://github.com/VladimirMakeev/D2ModdingToolset)
+ * Copyright (C) 2020 Vladimir Makeev.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef MQNETSERVICE_H
+#define MQNETSERVICE_H
+
+#include "d2list.h"
+#include <guiddef.h>
+
+namespace game {
+
+struct IMqNetSession;
+struct IMqNetSessEnum;
+struct IMqNetServiceVftable;
+
+struct IMqNetService
+{
+    IMqNetServiceVftable* vftable;
+};
+
+struct IMqNetServiceVftable
+{
+    using Destructor = void(__thiscall*)(IMqNetService* thisptr, char flags);
+    Destructor destructor;
+
+    using HasSessions = bool(__thiscall*)(IMqNetService* thisptr);
+    HasSessions hasSessions;
+
+    /**
+     * Returns list of sessions.
+     * CNetDPlayService calls IDirectPlay4::EnumSessions here.
+     * @param allSessions if set adds all found sessions to the list, otherwise available only.
+     * DPENUMSESSIONS_ALL or DPENUMSESSIONS_AVAILABLE in case of CNetDPlayService.
+     */
+    using GetSessions = void(__thiscall*)(IMqNetService* thisptr,
+                                          List<IMqNetSessEnum*>* sessions,
+                                          const GUID* appGuid,
+                                          const char* ipAddress,
+                                          bool allSessions,
+                                          bool requirePassword);
+    GetSessions getSessions;
+
+    /**
+     * Creates session with specified guid, name and password.
+     * CNetDPlayService calls IDirectPlay4::Open with DPOPEN_CREATE here.
+     */
+    using CreateSession = void(__thiscall*)(IMqNetService* thisptr,
+                                            IMqNetSession** netSession,
+                                            const GUID* appGuid,
+                                            const char* sessionName,
+                                            const char* password);
+    CreateSession createSession;
+
+    /**
+     * Joins session specified by netSessionEnum.
+     * CNetDPlayService calls IDirectPlay4::Open with DPOPEN_JOIN here.
+     */
+    using JoinSession = void(__thiscall*)(IMqNetService* thisptr,
+                                          IMqNetSession** netSession,
+                                          IMqNetSessEnum* netSessionEnum,
+                                          const char* password);
+    JoinSession joinSession;
+};
+
+assert_vftable_size(IMqNetServiceVftable, 5);
+
+} // namespace game
+
+#endif // MQNETSERVICE_H

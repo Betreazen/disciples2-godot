@@ -1,0 +1,47 @@
+[
+  {
+    "file": "passive-001.jsonl",
+    "sha256": "9dde9387e333c8d41545a1475ef2b7a353920ba2ee517d2b8ac745068b9edf06",
+    "bytes": 3156532,
+    "events": 22461,
+    "battles": 1,
+    "battle_end": true,
+    "scenario": "passive",
+    "started_at": "2026-09-18T19:26:38.998268+00:00",
+    "seconds": 506.2,
+    "status": "ok",
+    "saves": [
+      "f7-m15-diplo-human-t01-001.sg",
+      "f7-m15-diplo-human-t01-002.sg",
+      "f7-m15-diplo-human-t01-003.sg",
+      "f7-m15-diplo-human-t01-004.sg",
+      "f7-m15-diplo-human-t02-005.sg",
+      "f7-m15-diplo-human-t02-006.sg",
+      "f7-m15-diplo-human-t02-007.sg",
+      "f7-m15-diplo-human-t03-008.sg",
+      "f7-m15-diplo-human-t03-009.sg",
+      "f7-m15-diplo-human-t01-010.sg",
+      "f7-m15-diplo-human-t01-011.sg",
+      "f7-m15-diplo-human-t02-012.sg",
+      "f7-m15-diplo-human-t03-013.sg",
+      "ai-g1-rod-break-human-t01-014.sg",
+      "ai-g1-rod-break-human-t02-015.sg",
+      "ai-g1-rod-break-human-t02-016.sg",
+      "ai-g1-rod-break-human-t03-017.sg",
+      "ai-g1-rod-break-human-t04-018.sg",
+      "ai-g1-rod-break-human-t05-019.sg",
+      "ai-g1-rod-break-human-t06-020.sg",
+      "ai-g1-rod-break-human-t07-021.sg",
+      "ai-g1-rod-break-human-t08-022.sg",
+      "ai-g1-rod-break-human-t09-023.sg",
+      "ai-g1-rod-break-human-t10-024.sg",
+      "ai-g1-rod-break-human-t11-025.sg",
+      "ai-g1-rod-break-human-t12-026.sg"
+    ],
+    "saves_rejected": {
+      "неполный": 1,
+      "копия": 26,
+      "повтор": 12
+    }
+  }
+]

@@ -1,0 +1,33 @@
+From f60fd3e61479b380d9d109acefca2310e875604e Mon Sep 17 00:00:00 2001
+From: Betreazen <128125070+Betreazen@users.noreply.github.com>
+Date: Sat, 5 Sep 2026 17:11:06 +0300
+Subject: [PATCH] chore(probe): PlatformToolset v142 -> v143 for VS2022 MSVC
+ 14.44
+
+---
+ ScenarioGenerator/ScenarioGenerator.vcxproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ScenarioGenerator/ScenarioGenerator.vcxproj b/ScenarioGenerator/ScenarioGenerator.vcxproj
+index ecf1514..a421310 100644
+--- a/ScenarioGenerator/ScenarioGenerator.vcxproj
++++ b/ScenarioGenerator/ScenarioGenerator.vcxproj
+@@ -158,13 +158,13 @@
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+-    <PlatformToolset>v142</PlatformToolset>
++    <PlatformToolset>v143</PlatformToolset>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>v142</PlatformToolset>
++    <PlatformToolset>v143</PlatformToolset>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+-- 
+2.53.0.windows.1
+

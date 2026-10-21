@@ -1,0 +1,8 @@
+*
+!.gitignore
+!manifest.json
+!sample/
+!sample/*
+!2026*/
+2026*/*
+!2026*/manifest.json

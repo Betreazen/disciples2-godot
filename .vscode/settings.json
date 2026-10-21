@@ -1,0 +1,6 @@
+{
+  // Подмодули tools/d2probe — вендорный код зонда; SLikeNet и D2RSG несут локальный патч тулсета
+  // (tools/d2probe/patches, apply-patches.sh), поэтому их рабочее дерево всегда «изменено».
+  // В панели Source Control они не нужны.
+  "git.detectSubmodules": false
+}

@@ -1,0 +1,11 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../src/D2.Data/D2.Data.csproj" />
+    <ProjectReference Include="..\src\D2.Rules\D2.Rules.csproj" />
+  </ItemGroup>
+</Project>

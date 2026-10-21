@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Бенчмарки чистой логики (D2.Data/D2.Rules) без Godot: тот же формат JSON, что у bench.gd скилла gdscript-knowledge
+       (header, iterations, results: имя и замеры в микросекундах), чтобы bench_compare.gd сравнивал прогоны.
+       Запуск и ключи: в начале Program.cs. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Как у тестов (CLAUDE.md: серверный GC ускорил прогон), но для замера важнее, что GC один и тот же в базе и после. -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\D2.Data\D2.Data.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+[
+  {
+    "file": "battle-001.jsonl",
+    "sha256": "022eb5cee62415230f6dee30eb915bdfee85b468fa90422d6a8c00bf12041ea1",
+    "bytes": 1881548,
+    "events": 6382,
+    "battles": 10,
+    "battle_end": true,
+    "scenario": "test_fast_battle_b",
+    "started_at": "2026-09-06T22:20:12.242568+00:00",
+    "seconds": 514.2,
+    "status": "ok"
+  }
+]

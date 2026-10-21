@@ -1,0 +1,26 @@
+[
+  {
+    "file": "passive-001.jsonl",
+    "sha256": "5c0fd2305505777913fbcf90a4aab117a399fa6c60a2021a41a0e57a57171749",
+    "bytes": 7712090,
+    "events": 61871,
+    "battles": 15,
+    "battle_end": true,
+    "scenario": "passive",
+    "started_at": "2026-09-19T19:01:07.548524+00:00",
+    "seconds": 1617.3,
+    "status": "ok",
+    "saves": [
+      "ui-end-lose-human-t01-001.sg",
+      "ui-misc-human-t01-002.sg",
+      "ui-misc-human-t01-003.sg",
+      "ui-misc-human-t01-004.sg",
+      "ui-misc-human-t02-005.sg",
+      "ui-end-win-human-t01-006.sg"
+    ],
+    "saves_rejected": {
+      "копия": 6,
+      "повтор": 3
+    }
+  }
+]

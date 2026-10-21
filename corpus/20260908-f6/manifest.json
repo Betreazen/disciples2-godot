@@ -1,0 +1,170 @@
+[
+  {
+    "file": "map-001.jsonl",
+    "sha256": "b337ea8d246e893dbbac548e2fa727773bd27b13cffedcc7ac9f1f68ce1a4900",
+    "bytes": 956641,
+    "events": 4624,
+    "battles": 3,
+    "battle_end": true,
+    "scenario": "f6_route",
+    "started_at": "2026-09-08T11:26:21.341894+00:00",
+    "seconds": 1553.4,
+    "status": "route_failed",
+    "route": {
+      "file": "f6_route.json",
+      "sha256": "ced9f8fe70c0552c0fc6853d6243bfc94c71c7854c225df618d1ab960fb3be48",
+      "turns": 59,
+      "checkpoints": [
+        10,
+        20,
+        30,
+        40,
+        50
+      ]
+    },
+    "turns_played": 58,
+    "saves": [
+      {
+        "turn": 10,
+        "file": "save-10.sg",
+        "sha256": "fb52e3292ad00744b09ef0796de3ba58aba6bacadebe26b17c5b4fa0e5358264",
+        "bytes": 38381
+      },
+      {
+        "turn": 20,
+        "file": "save-20.sg",
+        "sha256": "18b2ba5a37f4bfbea67d80b189ff8862f549f193db0c12215d1268e408d666e2",
+        "bytes": 38381
+      },
+      {
+        "turn": 30,
+        "file": "save-30.sg",
+        "sha256": "5e2fe696164fe1ad28cc04ba11993ef1a5a5d78621acdee1660418b8fdf7ca82",
+        "bytes": 38381
+      },
+      {
+        "turn": 40,
+        "file": "save-40.sg",
+        "sha256": "3daba80b3236453b0ebb8e71a3aa4787ca367afff4e5c9909e8503b66aa33760",
+        "bytes": 38381
+      },
+      {
+        "turn": 50,
+        "file": "save-50.sg",
+        "sha256": "9557ead0a4293504fc5affaac24253a519383fadc6a67cc474f43bd5de084e4e",
+        "bytes": 38557
+      }
+    ],
+    "inputs": [
+      {
+        "turn": "start",
+        "file": "map-start.sg",
+        "sha256": "f3eb9f614b573b2e13ecbf955fc11424679492b0e66d15d823ee133175c5cb7c",
+        "bytes": 37969
+      },
+      {
+        "turn": "route",
+        "file": "route.json",
+        "sha256": "ced9f8fe70c0552c0fc6853d6243bfc94c71c7854c225df618d1ab960fb3be48",
+        "bytes": 24980
+      }
+    ],
+    "actions_done": [
+      {
+        "turn": 1,
+        "do": "verify_squad",
+        "note": "состав отряда: ['g000uu0021', 'g000uu0150', 'g000uu0178', 'g000uu0161', 'g000uu0171', 'g000uu0164']"
+      },
+      {
+        "turn": 1,
+        "do": "manual",
+        "note": "постройки: ['G000BB0012', 'G000BB0024']"
+      },
+      {
+        "turn": 1,
+        "do": "manual",
+        "note": "отряд столицы: ['g000uu3001', 'g000uu0008']"
+      },
+      {
+        "turn": 2,
+        "do": "cast",
+        "note": "каст G000SS0008 (страница 2, index 1)"
+      },
+      {
+        "turn": 2,
+        "do": "visit",
+        "note": "окно объекта открылось (чёрного 25.8%)"
+      },
+      {
+        "turn": 3,
+        "do": "cast",
+        "note": "каст G000SS0009 (страница 2, index 2)"
+      },
+      {
+        "turn": 3,
+        "do": "visit",
+        "note": "окно объекта открылось (чёрного 21.2%)"
+      },
+      {
+        "turn": 4,
+        "do": "visit",
+        "note": "окно объекта открылось (чёрного 24.2%)"
+      },
+      {
+        "turn": 44,
+        "do": "cast",
+        "note": "каст G000SS0107 (страница 3, index 0)"
+      },
+      {
+        "turn": 45,
+        "do": "cast",
+        "note": "каст G000SS0120 (страница 5, index 0)"
+      },
+      {
+        "turn": 49,
+        "do": "attack",
+        "note": "бой (цель (29, 8)): победитель S143KC0000, attack_new=49 attack_get=23 immune=28 dmg=4 xp=6"
+      },
+      {
+        "turn": 49,
+        "do": "battle",
+        "note": "бой (незапланированный, перед cast): победитель S143KC0000, attack_new=49 attack_get=23 immune=28 dmg=4 xp=6"
+      },
+      {
+        "turn": 49,
+        "do": "cast",
+        "note": "каст G000SS0007 (страница 2, index 0)"
+      },
+      {
+        "turn": 53,
+        "do": "cast",
+        "note": "каст G000SS0100 (страница 1, index 2)"
+      },
+      {
+        "turn": 53,
+        "do": "cast",
+        "note": "каст G000SS0017 (страница 4, index 0)"
+      },
+      {
+        "turn": 53,
+        "do": "cast",
+        "note": "каст G000SS0004 (страница 1, index 0)"
+      },
+      {
+        "turn": 53,
+        "do": "cast",
+        "note": "каст G000SS0064 (страница 1, index 1)"
+      },
+      {
+        "turn": 53,
+        "do": "attack",
+        "note": "бой (цель (12, 7)): победитель S143KC0000, attack_new=159 attack_get=14 immune=36 dmg=21 xp=5"
+      },
+      {
+        "turn": 59,
+        "do": "attack",
+        "note": "бой (цель (36, 13)): победитель S143KC0002, attack_new=49 attack_get=14 immune=59 dmg=27 xp=3"
+      }
+    ]
+  }
+]

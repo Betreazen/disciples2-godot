@@ -1,0 +1,26 @@
+[submodule "tools/d2probe/Detours"]
+	path = tools/d2probe/Detours
+	url = https://github.com/microsoft/Detours.git
+[submodule "tools/d2probe/fmt"]
+	path = tools/d2probe/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "tools/d2probe/GSL"]
+	path = tools/d2probe/GSL
+	url = https://github.com/microsoft/GSL.git
+[submodule "tools/d2probe/sol2"]
+	path = tools/d2probe/sol2
+	url = https://github.com/ThePhD/sol2.git
+[submodule "tools/d2probe/spdlog"]
+	path = tools/d2probe/spdlog
+	url = https://github.com/gabime/spdlog.git
+	branch = v1.x
+[submodule "tools/d2probe/SLikeNet"]
+	# Рабочее дерево несёт локальный патч tools/d2probe/patches (тулсет v143), накладывается apply-patches.sh.
+	ignore = dirty
+	path = tools/d2probe/SLikeNet
+	url = https://github.com/UnveN/SLikeNet.git
+[submodule "tools/d2probe/D2RSG"]
+	# Рабочее дерево несёт локальный патч tools/d2probe/patches (тулсет v143), накладывается apply-patches.sh.
+	ignore = dirty
+	path = tools/d2probe/D2RSG
+	url = https://github.com/UnveN/D2RSG.git

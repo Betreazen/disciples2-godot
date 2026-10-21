@@ -1,0 +1,43 @@
+[
+  {
+    "file": "map-001.jsonl",
+    "sha256": "651702bcb7ad01ba83dad47f14701bbbe313fed8fba4bd56862d629c3546756b",
+    "bytes": 634990,
+    "events": 2080,
+    "battles": 3,
+    "battle_end": true,
+    "scenario": "arena",
+    "started_at": "2026-09-08T15:16:03.182133+00:00",
+    "seconds": 216.8,
+    "status": "route_failed",
+    "route": {
+      "file": "arena_route.json",
+      "sha256": "ce326a248ac66595c963c76ba188c70c1b50062d993709778513054f1525406a",
+      "turns": 8,
+      "checkpoints": []
+    },
+    "turns_played": 1,
+    "saves": [],
+    "inputs": [
+      {
+        "turn": "start",
+        "file": "map-start.sg",
+        "sha256": "798c2fc398a1daac43208db8afd5fc91a3beb75688016581c93d56dd2b77fc5f",
+        "bytes": 41753
+      },
+      {
+        "turn": "route",
+        "file": "route.json",
+        "sha256": "ce326a248ac66595c963c76ba188c70c1b50062d993709778513054f1525406a",
+        "bytes": 13939
+      }
+    ],
+    "actions_done": [
+      {
+        "turn": 1,
+        "do": "verify_squad",
+        "note": "состав отряда: ['g000uu0019', 'g000uu0044', 'g000uu0044', 'g000uu0022', 'g000uu0022']"
+      }
+    ]
+  }
+]

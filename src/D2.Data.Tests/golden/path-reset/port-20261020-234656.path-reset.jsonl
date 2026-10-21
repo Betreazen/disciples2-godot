@@ -1,0 +1,11 @@
+{"seq":1,"t":25,"th":2,"ev":"start","when":"2026-10-20T23:46:56","commit":"fe1ed433","godot":"4.7.2-stable (official)","os":"Windows","display":"Windows","args":[],"screen":[1920,1080],"schema":"7.6"}
+{"seq":353,"t":96485,"th":2,"ev":"print","tag":"thief","text":"thief S143KC0006 -> S143RU0000 DLG_THIEF_ACTIONS"}
+{"seq":362,"t":99324,"th":2,"ev":"print","tag":"routedrop","text":"routedrop S143KC0006"}
+{"seq":418,"t":128831,"th":2,"ev":"print","tag":"thief","text":"thief S143KC0007 -> S143FT0004 DLG_THIEF_ACTIONS"}
+{"seq":453,"t":136749,"th":2,"ev":"print","tag":"thief","text":"thief S143KC0007 -> S143FT0004 DLG_THIEF_ACTIONS"}
+{"seq":500,"t":153467,"th":2,"ev":"print","tag":"rodbreak","text":"rodbreak ask S143KC0008 S143RD0000 путь=4"}
+{"seq":505,"t":158815,"th":2,"ev":"print","tag":"routedrop","text":"routedrop S143KC0008"}
+{"seq":726,"t":209347,"th":36,"ev":"turn","player":"S143PL0004","day":2,"gold":700,"human":true}
+{"seq":949,"t":291832,"th":23,"ev":"turn","player":"S143PL0004","day":3,"gold":800,"human":true}
+{"seq":1182,"t":335979,"th":2,"ev":"print","tag":"allyrefused","text":"allyrefused S143KC0004 щелчок=(16,17) цель=(16,17)"}
+{"seq":1189,"t":344895,"th":2,"ev":"print","tag":"routedrop","text":"routedrop S143KC0004"}

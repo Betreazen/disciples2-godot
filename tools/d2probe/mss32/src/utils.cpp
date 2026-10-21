@@ -1,0 +1,552 @@
+/*
+ * This file is part of the modding toolset for Disciples 2.
+ * (https://github.com/VladimirMakeev/D2ModdingToolset)
+ * Copyright (C) 2020 Vladimir Makeev.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "utils.h"
+#include "game.h"
+#include "interfmanager.h"
+#include "mempool.h"
+#include "midgardmsgbox.h"
+#include "midgardobjectmap.h"
+#include "midmsgboxbuttonhandlerstd.h"
+#include "midscenvariables.h"
+#include "mquikernelsimple.h"
+#include "smartptr.h"
+#include "sounds.h"
+#include "uimanager.h"
+#include <fstream>
+#include <random>
+#include <spdlog/spdlog.h>
+#include <wincrypt.h>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <commdlg.h>
+
+extern HMODULE library;
+
+namespace hooks {
+
+std::string trimSpaces(const std::string& str)
+{
+    const auto begin = str.find_first_not_of(" ");
+    if (begin == std::string::npos) {
+        return "";
+    }
+
+    const auto end = str.find_last_not_of(" ");
+    return str.substr(begin, end - begin + 1);
+}
+
+const std::filesystem::path& gameFolder()
+{
+    static std::filesystem::path folder{};
+
+    if (folder.empty()) {
+        folder = exePath();
+        folder.remove_filename();
+    }
+
+    return folder;
+}
+
+const std::filesystem::path& globalsFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "Globals"};
+    return folder;
+}
+
+const std::filesystem::path& scriptsFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "Scripts"};
+    return folder;
+}
+
+const std::filesystem::path& modifiersFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "Scripts" / "Modifiers"};
+    return folder;
+}
+
+const std::filesystem::path& templatesFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "Templates"};
+    return folder;
+}
+
+const std::filesystem::path& exportsFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "Exports"};
+    return folder;
+}
+
+const std::filesystem::path& interfFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "Interf"};
+    return folder;
+}
+
+const std::filesystem::path& scenDataFolder()
+{
+    static const std::filesystem::path folder{gameFolder() / "ScenData"};
+    return folder;
+}
+
+const std::filesystem::path& exePath()
+{
+    static std::filesystem::path exe{};
+
+    if (exe.empty()) {
+        HMODULE module = GetModuleHandle(NULL);
+        std::string moduleName(MAX_PATH, '\0');
+        GetModuleFileName(module, &moduleName[0], MAX_PATH - 1);
+
+        exe = std::filesystem::path(moduleName);
+    }
+
+    return exe;
+}
+
+std::string idToString(const game::CMidgardID* id, bool lowercase)
+{
+    const auto& api = game::CMidgardIDApi::get();
+    // toString (0x57f3ef) reads through a null pointer when the type part is missing from the
+    // engine's type table (value != invalidId): a probe reading garbage as an id crashed the game.
+    auto type = api.getType(id);
+    const char* typeString{};
+    if (!(*id == game::invalidId) && !api.idTypeToString(&typeString, &type)) {
+        return {"INVALID-ID"};
+    }
+
+    char idString[11] = {0};
+    api.toString(id, idString);
+
+    if (lowercase) {
+        for (auto& c : idString) {
+            c = (char)std::tolower((unsigned char)c);
+        }
+    }
+
+    return {idString};
+}
+
+std::string getInterfaceText(const char* textIdString)
+{
+    using namespace game;
+
+    if (textIdString == nullptr || strlen(textIdString) == 0)
+        return "";
+
+    CMidgardID textId{};
+    CMidgardIDApi::get().fromString(&textId, textIdString);
+
+    return {gameFunctions().getInterfaceText(&textId)};
+}
+
+std::string getInterfaceText(const char* textIdString, const char* def)
+{
+    using namespace game;
+
+    if (textIdString == nullptr || strlen(textIdString) == 0) {
+        return def;
+    }
+
+    CMidgardID textId{};
+    CMidgardIDApi::get().fromString(&textId, textIdString);
+
+    return {gameFunctions().getInterfaceText(&textId)};
+}
+
+const char* getGlobalText(const game::CMidgardID& textId)
+{
+    using namespace game;
+
+    const auto& globalApi = GlobalDataApi::get();
+
+    const auto texts = (*globalApi.getGlobalData())->texts;
+    return globalApi.findTextById(texts, &textId);
+}
+
+const char* getGlobalText(const std::string& textIdString)
+{
+    using namespace game;
+
+    CMidgardID textId{};
+    CMidgardIDApi::get().fromString(&textId, textIdString.c_str());
+    if (textId == invalidId)
+        return "";
+
+    return getGlobalText(textId);
+}
+
+bool replace(std::string& str, const std::string& keyword, const std::string& replacement)
+{
+    const auto pos = str.find(keyword);
+    if (pos == std::string::npos) {
+        return false;
+    }
+
+    str.replace(pos, keyword.length(), replacement);
+    return true;
+}
+
+int getRandomNumber(int min, int max)
+{
+    static std::random_device dev;
+    static std::mt19937 rng{dev()};
+
+    std::uniform_int_distribution<int> disribution(min, max);
+    return disribution(rng);
+}
+
+std::string readFile(const std::filesystem::path& file)
+{
+    // Do not resize resulting string to match file size because ifstream replaces \r\n with \n.
+    // Otherwise the string is padded with 0 chars and its size() returns incorrect value.
+    // Resulting string_view causes failures in Lua functions without explicit call to c_str.
+    // Either use binary mode to get exact contents or use iterator approach.
+    // While iterators are slower than binary read, Lua transforms \r\n to \n by itself anyway.
+    std::ifstream stream(file);
+    return std::string(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
+}
+
+bool readUserSelectedFile(std::string& contents, const char* filter, const char* directory)
+{
+    OPENFILENAME ofn;
+    ZeroMemory(&ofn, sizeof(ofn));
+
+    char file[MAX_PATH];
+    ZeroMemory(file, sizeof(file));
+
+    ofn.lStructSize = sizeof(ofn);
+    ofn.lpstrFile = file;
+    ofn.lpstrFile[0] = 0;
+    ofn.nMaxFile = sizeof(file);
+    ofn.lpstrFilter = filter;
+    ofn.nFilterIndex = 1;
+    ofn.lpstrInitialDir = directory;
+    ofn.lpstrFileTitle = NULL;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    // Handle DisciplesGL wrapper window presence.
+    // Wrapper creates its own window for the fullscreen mode
+    // and it should be used as owner for open dialog box to be displayed correctly.
+    static const char disciplesGlClassName[] = "7903f211-51ca-4a51-9ec5-e1301db2d24d";
+    HWND disciplesGlWindow = FindWindowEx(nullptr, nullptr, disciplesGlClassName, nullptr);
+    if (disciplesGlWindow) {
+        ofn.hwndOwner = disciplesGlWindow;
+    } else {
+        // Use original game window handle if there is no wrapper
+        // or wrapper works in a windowed mode.
+        using namespace game;
+
+        UIManagerPtr manager;
+        CUIManagerApi::get().get(&manager);
+        const auto* kernel = manager.data->data->uiKernel;
+
+        ofn.hwndOwner = kernel->vftable->getWindowHandle(kernel);
+
+        SmartPointerApi::get().createOrFree((game::SmartPointer*)&manager, nullptr);
+    }
+
+    if (!GetOpenFileName(&ofn)) {
+        return false;
+    }
+
+    contents = readFile(std::filesystem::path{file});
+    return true;
+}
+
+void showInterface(game::CInterface* interf)
+{
+    using namespace game;
+
+    InterfManagerImplPtr ptr;
+    CInterfManagerImplApi::get().get(&ptr);
+
+    ptr.data->CInterfManagerImpl::CInterfManager::vftable->showInterface(ptr.data, interf);
+    SmartPointerApi::get().createOrFree((SmartPointer*)&ptr, nullptr);
+}
+
+void hideInterface(game::CInterface* interf)
+{
+    using namespace game;
+
+    InterfManagerImplPtr ptr;
+    CInterfManagerImplApi::get().get(&ptr);
+
+    ptr.data->CInterfManagerImpl::CInterfManager::vftable->hideInterface(ptr.data, interf);
+    SmartPointerApi::get().createOrFree((SmartPointer*)&ptr, nullptr);
+}
+
+void showMessageBox(const std::string& message,
+                    game::CMidMsgBoxButtonHandler* buttonHandler,
+                    bool showCancel)
+{
+    using namespace game;
+
+    auto memAlloc = Memory::get().allocate;
+    if (!buttonHandler) {
+        buttonHandler = (CMidMsgBoxButtonHandlerStd*)memAlloc(sizeof(CMidMsgBoxButtonHandlerStd));
+        buttonHandler->vftable = CMidMsgBoxButtonHandlerStdApi::vftable();
+    }
+
+    CMidgardMsgBox* msgBox = (CMidgardMsgBox*)memAlloc(sizeof(CMidgardMsgBox));
+    CMidgardMsgBoxApi::get().constructor(msgBox, message.c_str(), showCancel, buttonHandler,
+                                         nullptr, nullptr);
+
+    showInterface(msgBox);
+}
+
+void showErrorMessageBox(const std::string& message)
+{
+    spdlog::error(message);
+    MessageBox(NULL, message.c_str(), "mss32.dll proxy", MB_OK);
+}
+
+void createTimerEvent(game::UiEvent* timerEvent,
+                      void* userData,
+                      void* callback,
+                      std::uint32_t timeoutMs)
+{
+    using namespace game;
+
+    const auto freeFunctor = SmartPointerApi::get().createOrFreeNoDtor;
+    const auto& uiManagerApi = CUIManagerApi::get();
+
+    using TimerCallback = CUIManagerApi::Api::TimerEventCallback;
+
+    TimerCallback timerCallback{};
+    timerCallback.callback = (TimerCallback::Callback)callback;
+
+    SmartPointer functor;
+    uiManagerApi.createTimerEventFunctor(&functor, 0, userData, &timerCallback);
+
+    UIManagerPtr uiManager;
+    uiManagerApi.get(&uiManager);
+
+    uiManagerApi.createTimerEvent(uiManager.data, timerEvent, &functor, timeoutMs);
+
+    freeFunctor(&functor, nullptr);
+    SmartPointerApi::get().createOrFree((SmartPointer*)&uiManager, nullptr);
+}
+
+std::uint32_t createMessageEvent(game::UiEvent* messageEvent,
+                                 void* userData,
+                                 void* callback,
+                                 const char* messageName)
+{
+    using namespace game;
+
+    const auto freeFunctor = SmartPointerApi::get().createOrFreeNoDtor;
+    const auto& uiManagerApi = CUIManagerApi::get();
+
+    using MessageCallback = CUIManagerApi::Api::MessageEventCallback;
+
+    MessageCallback messageCallback = (MessageCallback)callback;
+
+    SmartPointer functor;
+    uiManagerApi.createMessageEventFunctor(&functor, 0, userData, &messageCallback);
+
+    UIManagerPtr uiManager;
+    uiManagerApi.get(&uiManager);
+
+    std::uint32_t messageId = uiManagerApi.registerMessage(uiManager.data, messageName);
+    uiManagerApi.createMessageEvent(uiManager.data, messageEvent, &functor, messageId);
+
+    freeFunctor(&functor, nullptr);
+    SmartPointerApi::get().createOrFree((SmartPointer*)&uiManager, nullptr);
+
+    return messageId;
+}
+
+std::string computeHash(std::vector<std::filesystem::path> filenames)
+{
+    struct HashGuard
+    {
+        HashGuard() = default;
+        ~HashGuard()
+        {
+            CryptDestroyHash(hash);
+            CryptReleaseContext(provider, 0);
+        }
+
+        HCRYPTPROV provider{};
+        HCRYPTHASH hash{};
+    };
+
+    std::sort(filenames.begin(), filenames.end());
+
+    HashGuard guard;
+    if (!CryptAcquireContext(&guard.provider, nullptr, nullptr, PROV_RSA_FULL,
+                             CRYPT_VERIFYCONTEXT)) {
+        spdlog::error("Could not acquire context, reason {:d}", GetLastError());
+        return "";
+    }
+
+    if (!CryptCreateHash(guard.provider, CALG_MD5, 0, 0, &guard.hash)) {
+        spdlog::error("Could not create hash, reason {:d}", GetLastError());
+        return "";
+    }
+
+    for (const auto& file : filenames) {
+        std::ifstream stream{file, std::ios_base::binary};
+        if (!stream) {
+            spdlog::error("Could not open file '{:s}'", file.filename().string());
+            return "";
+        }
+
+        const auto size = static_cast<size_t>(std::filesystem::file_size(file));
+        std::vector<unsigned char> contents(size);
+
+        stream.read(reinterpret_cast<char*>(contents.data()), size);
+        stream.close();
+
+        if (!CryptHashData(guard.hash, contents.data(), size, 0)) {
+            spdlog::error("Compute hash failed, reason {:d}", GetLastError());
+            return "";
+        }
+    }
+
+    constexpr size_t md5Length{16};
+    DWORD length{md5Length};
+    unsigned char md5Hash[md5Length] = {0};
+
+    if (!CryptGetHashParam(guard.hash, HP_HASHVAL, md5Hash, &length, 0)) {
+        spdlog::error("Could not get hash value, reason {:d}", GetLastError());
+        return "";
+    }
+
+    std::string hash;
+    static const char hexDigits[] = "0123456789abcdef";
+    for (DWORD i = 0; i < length; ++i) {
+        hash += hexDigits[md5Hash[i] >> 4];
+        hash += hexDigits[md5Hash[i] & 0xf];
+    }
+    return hash;
+}
+
+void forEachScenarioObject(const game::IMidgardObjectMap* objectMap,
+                           game::IdType idType,
+                           const std::function<void(const game::IMidScenarioObject*)>& func)
+{
+    using namespace game;
+
+    IteratorPtr current{};
+    objectMap->vftable->begin(objectMap, &current);
+
+    IteratorPtr end{};
+    objectMap->vftable->end(objectMap, &end);
+
+    const auto& getType{CMidgardIDApi::get().getType};
+
+    while (!current.data->vftable->end(current.data, end.data)) {
+        const auto* id{current.data->vftable->getObjectId(current.data)};
+
+        if (getType(id) == idType) {
+            func(objectMap->vftable->findScenarioObjectById(objectMap, id));
+        }
+
+        current.data->vftable->advance(current.data);
+    }
+
+    const auto& free{SmartPointerApi::get().createOrFree};
+
+    free((SmartPointer*)&current, nullptr);
+    free((SmartPointer*)&end, nullptr);
+}
+
+void allocateString(char** dest, const char* src)
+{
+    auto& memory = game::Memory::get();
+
+    if (*dest) {
+        memory.freeNonZero(*dest);
+        *dest = nullptr;
+    }
+
+    if (src && *src) {
+        const auto length = std::strlen(src);
+        *dest = (char*)memory.allocate(length + 1);
+        std::strncpy(*dest, src, length);
+        (*dest)[length] = 0;
+    }
+}
+
+bool writeResourceToFile(HANDLE file, int resourceId)
+{
+    HRSRC resourceInfo = ::FindResource(library, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    if (resourceInfo == NULL) {
+        return false;
+    }
+
+    DWORD resourceSize = ::SizeofResource(library, resourceInfo);
+    if (resourceSize == 0) {
+        return false;
+    }
+
+    HGLOBAL resource = ::LoadResource(library, resourceInfo);
+    if (resource == NULL) {
+        return false;
+    }
+
+    DWORD written;
+    auto data = reinterpret_cast<const char*>(::LockResource(resource));
+    if (!::WriteFile(file, data, resourceSize, &written, NULL) || written != resourceSize) {
+        return false;
+    }
+
+    return true;
+}
+
+bool writeResourceToFile(const std::filesystem::path& path, int resourceId, bool rewriteExisting)
+{
+    if (!rewriteExisting) {
+        auto attr = GetFileAttributes(path.string().c_str());
+        if (attr != INVALID_FILE_ATTRIBUTES && !(attr & FILE_ATTRIBUTE_DIRECTORY)) {
+            return true;
+        }
+    }
+
+    auto file = ::CreateFile(path.string().c_str(), GENERIC_WRITE, 0, NULL, OPEN_ALWAYS,
+                             FILE_ATTRIBUTE_NORMAL, NULL);
+    if (file == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+
+    bool result = writeResourceToFile(file, resourceId);
+    ::CloseHandle(file);
+    return result;
+}
+
+void playSoundEffect(game::SoundEffect effect)
+{
+    using namespace game;
+
+    const auto& api{SoundsApi::get()};
+
+    SmartPtr<Sounds> sounds{};
+    api.instance(&sounds);
+
+    SmartPointer functor{};
+    api.playSound(sounds.data, effect, -1, &functor);
+
+    SmartPointerApi::get().createOrFreeNoDtor(&functor, nullptr);
+    api.soundsPtrSetData(&sounds, nullptr);
+}
+
+} // namespace hooks

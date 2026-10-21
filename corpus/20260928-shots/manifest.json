@@ -1,0 +1,85 @@
+[
+  {
+    "file": "passive-001.jsonl",
+    "sha256": "a2fe3051a1dbef7f74ce086cfc39969de1a927dc1d9ab1c94319eccbe8d8eb3a",
+    "bytes": 24626,
+    "events": 148,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "passive",
+    "started_at": "2026-09-27T14:30:04.543160+00:00",
+    "seconds": 117.3,
+    "status": "ok",
+    "saves": [],
+    "saves_rejected": {}
+  },
+  {
+    "file": "passive-002.jsonl",
+    "sha256": "27123308a5d97d612a8e4e00c65976926bddba7cacb86c79a7d984cbe7a78c95",
+    "bytes": 40542622,
+    "events": 214930,
+    "battles": 42,
+    "battle_end": true,
+    "scenario": "passive",
+    "started_at": "2026-09-27T14:33:54.894507+00:00",
+    "seconds": 1502.2,
+    "status": "ok",
+    "saves": [
+      "dyhanie-smerti-human-t01-001.sg",
+      "dyhanie-smerti-human-t01-002.sg",
+      "ng-diffgame-0-human-t01-003.sg",
+      "ng-diffgame-0-human-t01-004.sg",
+      "ng-diffgame-0-human-t02-005.sg",
+      "ng-diffgame-0-human-t01-006.sg",
+      "ng-diffgame-0-human-t02-007.sg",
+      "ng-diffgame-2-human-t01-008.sg",
+      "ng-diffgame-2-human-t02-009.sg",
+      "ai-q14-crit-elf-t01-010.sg",
+      "ai-q09-ai-ai-diplomacy-human-t01-011.sg",
+      "ai-q09-ai-ai-diplomacy-human-t02-012.sg",
+      "ai-q09-ai-ai-diplomacy-human-t03-013.sg",
+      "ai-q09-ai-ai-diplomacy-human-t04-014.sg",
+      "ai-q09-ai-ai-diplomacy-human-t05-015.sg",
+      "ai-q09-ai-ai-diplomacy-human-t06-016.sg",
+      "ai-q09-ai-ai-diplomacy-human-t07-017.sg",
+      "ai-q09-ai-ai-diplomacy-human-t08-018.sg",
+      "ai-q09-ai-ai-diplomacy-human-t09-019.sg",
+      "ai-q09-ai-ai-diplomacy-human-t10-020.sg",
+      "ai-q09-ai-ai-diplomacy-human-t11-021.sg",
+      "ai-q09-ai-ai-diplomacy-human-t12-022.sg",
+      "ai-q09-ai-ai-diplomacy-human-t13-023.sg",
+      "ai-q09-ai-ai-diplomacy-human-t14-024.sg",
+      "ai-q09-ai-ai-diplomacy-human-t15-025.sg",
+      "ai-q09-ai-ai-diplomacy-human-t16-026.sg",
+      "ai-q09-ai-ai-diplomacy-human-t17-027.sg",
+      "ai-q09-ai-ai-diplomacy-human-t18-028.sg",
+      "ai-q09-ai-ai-diplomacy-human-t19-029.sg",
+      "ai-q09-ai-ai-diplomacy-human-t20-030.sg"
+    ],
+    "saves_rejected": {
+      "копия": 30,
+      "повтор": 22,
+      "неполный": 4
+    }
+  },
+  {
+    "file": "passive-003.jsonl",
+    "sha256": "c0d59f4ebc6b93b976c5b8698d777c8aada2ad5049a0f0af28bbb7596d1c6b71",
+    "bytes": 675327,
+    "events": 5148,
+    "battles": 0,
+    "battle_end": false,
+    "scenario": "passive",
+    "started_at": "2026-09-27T14:59:30.004631+00:00",
+    "seconds": 67.3,
+    "status": "ok",
+    "saves": [
+      "ng-diffgame-0-human-t01-031.sg",
+      "ng-diffgame-0-human-t02-032.sg"
+    ],
+    "saves_rejected": {
+      "копия": 2,
+      "повтор": 1
+    }
+  }
+]

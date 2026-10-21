@@ -1,0 +1,231 @@
+{
+  "runs": [
+    {
+      "dir": "20260906-a",
+      "files": 3,
+      "battles": 17,
+      "events": 6264,
+      "battle_end": 3,
+      "status": {
+        "ok": 3
+      }
+    },
+    {
+      "dir": "20260906-b",
+      "files": 1,
+      "battles": 10,
+      "events": 6382,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260906-c",
+      "files": 1,
+      "battles": 10,
+      "events": 3576,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260906-d",
+      "files": 1,
+      "battles": 10,
+      "events": 5116,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260906-e",
+      "files": 1,
+      "battles": 10,
+      "events": 4575,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260906-fast",
+      "files": 52,
+      "battles": 161,
+      "events": 6068,
+      "battle_end": 52,
+      "status": {
+        "ok": 52
+      }
+    },
+    {
+      "dir": "20260906-manual",
+      "files": 1,
+      "battles": 3,
+      "events": 116,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260906-v2",
+      "files": 5,
+      "battles": 5,
+      "events": 541,
+      "battle_end": 5,
+      "status": {
+        "ok": 5
+      }
+    },
+    {
+      "dir": "20260907-c4",
+      "files": 1,
+      "battles": 0,
+      "events": 1865,
+      "battle_end": 0,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260908-f6",
+      "files": 1,
+      "battles": 3,
+      "events": 4624,
+      "battle_end": 1,
+      "status": {
+        "route_failed": 1
+      }
+    },
+    {
+      "dir": "20260909-arena1",
+      "files": 1,
+      "battles": 3,
+      "events": 2080,
+      "battle_end": 1,
+      "status": {
+        "route_failed": 1
+      }
+    },
+    {
+      "dir": "20260909-arena2",
+      "files": 1,
+      "battles": 7,
+      "events": 4499,
+      "battle_end": 1,
+      "status": {
+        "route_failed": 1
+      }
+    },
+    {
+      "dir": "20260918-probe65",
+      "files": 1,
+      "battles": 115,
+      "events": 399573,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260919-f7",
+      "files": 2,
+      "battles": 9,
+      "events": 28198,
+      "battle_end": 2,
+      "status": {
+        "ok": 2
+      }
+    },
+    {
+      "dir": "20260919-f7b",
+      "files": 1,
+      "battles": 1,
+      "events": 22461,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260919-human",
+      "files": 1,
+      "battles": 161,
+      "events": 505460,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260920-gaps",
+      "files": 1,
+      "battles": 9,
+      "events": 43206,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260920-legions",
+      "files": 1,
+      "battles": 122,
+      "events": 399005,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260920-ui",
+      "files": 1,
+      "battles": 7,
+      "events": 114339,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260921-ui",
+      "files": 4,
+      "battles": 0,
+      "events": 21258,
+      "battle_end": 0,
+      "status": {
+        "ok": 4
+      }
+    },
+    {
+      "dir": "20260922-ui",
+      "files": 1,
+      "battles": 15,
+      "events": 61871,
+      "battle_end": 1,
+      "status": {
+        "ok": 1
+      }
+    },
+    {
+      "dir": "20260928-shots",
+      "files": 3,
+      "battles": 42,
+      "events": 220226,
+      "battle_end": 1,
+      "status": {
+        "ok": 3
+      }
+    }
+  ],
+  "totals": {
+    "dirs": 22,
+    "files": 85,
+    "battles": 720,
+    "events": 1861303,
+    "battle_end": 78
+  }
+}
